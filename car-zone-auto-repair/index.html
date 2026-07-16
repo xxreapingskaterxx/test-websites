@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Car Zone Auto Repair | Baytown, TX Auto Repair &amp; Service</title>
+<meta name="description" content="Car Zone Auto Repair is Baytown, Texas's trusted full-service auto repair shop. ASE-certified technicians, same-day service, and 24/7 AI booking assistant." />
+<meta name="theme-color" content="#0b0d10" />
+
+<!--
+  ============================================================================
+  SETUP CHECKLIST — replace these before going live:
+  1. Business info: address, phone, email, hours — search "TODO:" in this file.
+  2. AI Assistant (Vapi):
+       - Sign up at vapi.ai, create an Assistant configured to answer questions
+         and collect booking details (name/phone/service/preferred time).
+       - Replace VAPI_PUBLIC_KEY and VAPI_ASSISTANT_ID in js/main.js.
+       - Until real keys are set, the widget runs in DEMO_MODE with simulated
+         responses so the page is fully functional out of the box.
+  3. Booking (Calendly): replace CALENDLY_URL in js/main.js with your real
+     scheduling link (e.g. https://calendly.com/car-zone-auto/appointment).
+  4. Reviews:
+       - Replace GOOGLE_REVIEW_URL in js/main.js with your Google Business
+         Profile "write a review" short link (g.page/r/.../review).
+       - Low-star feedback currently logs to console + shows a confirmation.
+         Wire submitFeedback() in js/main.js to a form backend (Formspree,
+         EmailJS, etc.) or a mailto: link to actually deliver it to your inbox.
+  5. Social links and Google Map query — search "TODO:" in this file.
+  6. Management login (footer "Management Login" button): currently DEMO-ONLY
+     client-side auth (admin / carzone2024, see MGMT_USERNAME/MGMT_PASSWORD in
+     js/main.js) protecting a placeholder dashboard. NOT real security — replace
+     with real server-side auth (Netlify Identity, Auth0, Firebase Auth, custom
+     backend) before this ever guards anything sensitive.
+  ============================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Non-blocking font load: page renders immediately on fallback fonts, swaps in
+     Oswald/Inter once available. Never gates first paint on the Google Fonts CDN. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" /></noscript>
+
+<link rel="stylesheet" href="css/styles.css" />
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%23ff5a1f%22/><path d=%22M4 15l1.2-4.8A2 2 0 0 1 7.1 9h9.8a2 2 0 0 1 1.9 1.2L20 15%22 stroke=%22white%22 stroke-width=%221.6%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/><circle cx=%227.5%22 cy=%2216.5%22 r=%221.6%22 fill=%22white%22/><circle cx=%2216.5%22 cy=%2216.5%22 r=%221.6%22 fill=%22white%22/></svg>" />
+
+<!--
+  Third-party SDKs (Vapi voice AI, Calendly booking) are loaded dynamically by
+  js/main.js, and only once CONFIG has real keys/links set — see the setup
+  checklist above. Scroll/entrance animations are hand-rolled in CSS + vanilla
+  JS (no animation library) so the page is fully interactive and animated with
+  zero external network dependency, on any device or connection.
+-->
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============================== HEADER ============================== -->
+<header class="site-header" id="siteHeader">
+  <div class="container">
+    <a href="#main" class="brand" aria-label="Car Zone Auto Repair home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15l1.2-4.8A2 2 0 0 1 7.1 9h9.8a2 2 0 0 1 1.9 1.2L20 15"/><path d="M2 15h20v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H5v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/><circle cx="7.5" cy="16.5" r="1.6"/><circle cx="16.5" cy="16.5" r="1.6"/></svg>
+      </span>
+      CAR <strong>ZONE</strong>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#why-us">Why Us</a>
+      <a href="#booking">Book Now</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="header-call" href="tel:+12815550142">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <!-- TODO: replace with real phone number --> (281) 555-0142
+      </a>
+      <a href="#booking" class="btn btn-primary btn-sm">Book Now</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <ul>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why-us">Why Us</a></li>
+    <li><a href="#booking">Book Now</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="tel:+12815550142" class="btn btn-ghost btn-block">Call (281) 555-0142</a>
+  <a href="#booking" class="btn btn-primary btn-block">Book an Appointment</a>
+</div>
+
+<main id="main">
+  <!-- ============================== HERO ============================== -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-content">
+      <p class="eyebrow reveal" data-reveal>Baytown, Texas</p>
+      <h1 class="reveal" data-reveal>Honest Auto Repair, <span>Done Right</span> The First Time</h1>
+      <p class="hero-sub reveal" data-reveal>ASE-certified technicians, same-day service on most repairs, and a 24/7 AI service advisor that can answer questions and book your appointment while you sleep.</p>
+      <div class="hero-ctas reveal" data-reveal>
+        <a href="#booking" class="btn btn-primary">Schedule Service</a>
+        <button class="btn btn-ghost" id="heroAiBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+          Ask Our AI Assistant
+        </button>
+      </div>
+
+      <div class="trust-row reveal" data-reveal>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/></svg>
+          <div><strong>18 Years</strong><span>Serving Baytown</span></div>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <div><strong>12 ASE Techs</strong><span>Certified &amp; trained</span></div>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div><strong>4.9 / 5</strong><span>Google Rating</span></div>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div><strong>Same-Day</strong><span>Most repairs</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue"><span class="dot"></span>Scroll</div>
+  </section>
+
+  <!-- ============================== SERVICES ============================== -->
+  <section id="services" class="light-section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow" style="justify-content:center">What We Do</p>
+        <h2>Full-Service Auto Repair</h2>
+        <p>From routine maintenance to major repairs, our ASE-certified team handles it all with upfront pricing and no surprises.</p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card reveal" data-reveal>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+          <h3>Oil &amp; Fluid Service</h3>
+          <p>Full-synthetic oil changes, fluid flushes, and filter replacements to keep your engine running smoothly.</p>
+          <span class="card-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </article>
+
+        <article class="service-card reveal" data-reveal>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></div>
+          <h3>Brake Repair</h3>
+          <p>Pads, rotors, and brake line service backed by a workmanship warranty. Free brake inspections.</p>
+          <span class="card-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </article>
+
+        <article class="service-card reveal" data-reveal>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2m16 0h2M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M4.9 19.1l1.4-1.4m11.4-11.4l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></div>
+          <h3>AC &amp; Heating</h3>
+          <p>Beat the Texas heat with fast AC diagnostics, recharges, and compressor repair.</p>
+          <span class="card-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </article>
+
+        <article class="service-card reveal" data-reveal>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-8 4 16 2-8h6"/></svg></div>
+          <h3>Check Engine &amp; Diagnostics</h3>
+          <p>Computerized diagnostics to pinpoint the issue fast &mdash; no guesswork, no unnecessary parts.</p>
+          <span class="card-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </article>
+
+        <article class="service-card reveal" data-reveal>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3M6.3 6.3l2 2M15.7 15.7l2 2M6.3 17.7l2-2M15.7 8.3l2-2"/></svg></div>
+          <h3>Tires &amp; Alignment</h3>
+          <p>Tire sales, rotations, balancing, and precision wheel alignment for a smoother, safer ride.</p>
+          <span class="card-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </article>
+
+        <article class="service-card reveal" data-reveal>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2M3 13h18"/></svg></div>
+          <h3>Transmission Repair</h3>
+          <p>From fluid service to full rebuilds, we keep your transmission shifting smoothly for the long haul.</p>
+          <span class="card-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== WHY CHOOSE US ============================== -->
+  <section id="why-us">
+    <div class="container why-grid">
+      <div>
+        <p class="eyebrow">Why Baytown Trusts Us</p>
+        <h2 style="margin:var(--space-2) 0 var(--space-4)">Straight Answers. Fair Prices. No Games.</h2>
+        <ul class="feature-list">
+          <li class="reveal" data-reveal>
+            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <div><h4>Upfront, written estimates</h4><p>You approve every repair before we touch your vehicle &mdash; no surprise charges.</p></div>
+          </li>
+          <li class="reveal" data-reveal>
+            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <div><h4>24-month / 24,000-mile warranty</h4><p>Every repair is backed by a nationwide warranty for your peace of mind.</p></div>
+          </li>
+          <li class="reveal" data-reveal>
+            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <div><h4>Free shuttle &amp; loaner vehicles</h4><p>We'll get you where you need to go while your car is in the shop.</p></div>
+          </li>
+          <li class="reveal" data-reveal>
+            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <div><h4>Book anytime with our AI assistant</h4><p>Chat or talk to our 24/7 AI service advisor to get answers or grab a slot instantly.</p></div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card reveal" data-reveal><div class="stat-num" data-counter="18">0</div><div class="stat-label">Years in Business</div></div>
+        <div class="stat-card reveal" data-reveal><div class="stat-num"><span data-counter="25">0</span>k+</div><div class="stat-label">Cars Serviced</div></div>
+        <div class="stat-card reveal" data-reveal><div class="stat-num" data-counter="12">0</div><div class="stat-label">ASE Certified Techs</div></div>
+        <div class="stat-card reveal" data-reveal><div class="stat-num" data-counter="98">0</div><div class="stat-label">% Same-Day Completion</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== AI ASSISTANT ============================== -->
+  <section id="ai-assistant" class="ai-section">
+    <div class="container ai-grid">
+      <div class="ai-copy">
+        <p class="eyebrow">Meet Zoe</p>
+        <h2 style="margin:var(--space-2) 0 var(--space-3)">Your 24/7 AI Service Advisor</h2>
+        <p class="hero-sub" style="margin-bottom:var(--space-4)">Talk or type to Zoe any time, day or night. She can answer questions about services and pricing, and book a real appointment straight into our calendar &mdash; no hold music required.</p>
+        <ul class="feature-list">
+          <li class="reveal" data-reveal>
+            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <div><h4>Voice or text, your choice</h4><p>Click the mic to talk naturally, or type if you'd rather not.</p></div>
+          </li>
+          <li class="reveal" data-reveal>
+            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <div><h4>Real scheduling, instantly</h4><p>Zoe books directly into our live calendar &mdash; you'll get a confirmation on the spot.</p></div>
+          </li>
+          <li class="reveal" data-reveal>
+            <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <div><h4>Always on</h4><p>Available around the clock, even after we've locked up for the night.</p></div>
+          </li>
+        </ul>
+        <button class="btn btn-primary" id="aiCopyBtn" style="margin-top:var(--space-4)">Try It Now</button>
+      </div>
+
+      <div class="ai-preview-card reveal" data-reveal>
+        <div class="ai-preview-header">
+          <div class="ai-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+            <span class="pulse-dot" aria-hidden="true"></span>
+          </div>
+          <div><strong>Zoe &mdash; AI Service Advisor</strong><span>Online now</span></div>
+        </div>
+        <div class="ai-preview-body" id="previewChatBody">
+          <div class="chat-bubble bot">Hi! I'm Zoe from Car Zone Auto Repair. Want me to check availability for an oil change or brake inspection this week?</div>
+          <div class="chat-bubble user">Do you have anything open Thursday afternoon?</div>
+          <div class="chat-bubble bot">Yes &mdash; I have 1:30 PM or 3:00 PM open Thursday for a brake inspection. Want me to lock one in?</div>
+        </div>
+        <div class="ai-preview-footer">
+          <input type="text" placeholder="Type your message..." aria-label="Chat message" disabled />
+          <button class="mic-btn" aria-label="Talk to Zoe" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>
+          </button>
+          <button aria-label="Send" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== BOOKING ============================== -->
+  <section id="booking" class="light-section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow" style="justify-content:center">Schedule Service</p>
+        <h2>Book Your Appointment</h2>
+        <p>Pick a time that works for you. Prefer to talk it through first? Ask Zoe, our AI assistant, in the corner of your screen.</p>
+      </div>
+
+      <div class="booking-panel reveal" data-reveal>
+        <!-- Calendly inline embed. Replace CALENDLY_URL in js/main.js with your real scheduling link. -->
+        <div class="booking-embed" id="calendlyEmbed" data-url="">
+          <div class="booking-fallback">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <h3>Booking calendar coming soon</h3>
+            <p>Add your Calendly link in <code>js/main.js</code> (CALENDLY_URL) to activate live scheduling here. In the meantime, call us or ask Zoe to book for you.</p>
+            <a href="tel:+12815550142" class="btn btn-dark btn-sm">Call to Book: (281) 555-0142</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== REVIEWS ============================== -->
+  <section id="reviews">
+    <div class="container reviews-grid">
+      <div class="rating-widget reveal" data-reveal>
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-primary)"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <h3>How was your visit?</h3>
+        <p style="color:var(--color-text-muted);font-size:var(--fs-sm)">Your feedback helps us improve &mdash; and helps other Baytown drivers find us.</p>
+
+        <div class="star-row" id="starRow" role="radiogroup" aria-label="Rate your experience from 1 to 5 stars">
+          <!-- 5 star buttons generated identically; JS wires interaction -->
+          <button class="star-btn" data-star="1" role="radio" aria-checked="false" aria-label="1 star"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+          <button class="star-btn" data-star="2" role="radio" aria-checked="false" aria-label="2 stars"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+          <button class="star-btn" data-star="3" role="radio" aria-checked="false" aria-label="3 stars"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+          <button class="star-btn" data-star="4" role="radio" aria-checked="false" aria-label="4 stars"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+          <button class="star-btn" data-star="5" role="radio" aria-checked="false" aria-label="5 stars"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+        </div>
+        <div class="rating-hint" id="ratingHint" aria-live="polite"></div>
+
+        <!-- 4-5 star path: shown briefly, then redirects to Google -->
+        <div class="rating-followup" id="highRatingFollowup">
+          <p style="font-size:var(--fs-sm);color:var(--color-text-muted);text-align:center">Awesome! Taking you to Google to share the love&hellip;</p>
+        </div>
+
+        <!-- 1-3 star path: private feedback form -->
+        <form class="rating-followup" id="lowRatingForm" novalidate>
+          <div class="field">
+            <label for="fbName">Name</label>
+            <input type="text" id="fbName" name="name" required autocomplete="name" />
+          </div>
+          <div class="field">
+            <label for="fbEmail">Email or phone</label>
+            <input type="text" id="fbEmail" name="contact" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="fbMessage">What happened? We want to make it right.</label>
+            <textarea id="fbMessage" name="message" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-sm">Send Privately to Car Zone</button>
+          <p class="form-note">This goes directly to our management team, not posted publicly. <!-- TODO: wire to email backend, see js/main.js submitFeedback() --></p>
+          <div class="form-success" id="fbSuccess">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="16 9 10.5 15.5 8 13"/></svg>
+            <span>Thanks for letting us know &mdash; our service manager will reach out shortly.</span>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <p class="eyebrow">What Baytown Says</p>
+        <h2 style="margin:var(--space-2) 0 var(--space-4)">Real Reviews From Real Customers</h2>
+        <div class="testimonials">
+          <div class="testimonial-card reveal" data-reveal>
+            <div class="stars">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <p>&ldquo;Booked through their AI assistant at 11pm and had an appointment confirmed before I went to bed. Showed up, brakes done in an hour. Painless.&rdquo;</p>
+            <div class="author"><div class="avatar">M</div><div><strong>Marcus D.</strong><span>Baytown, TX</span></div></div>
+          </div>
+          <div class="testimonial-card reveal" data-reveal>
+            <div class="stars">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <p>&ldquo;Upfront pricing, no upsell games. They showed me the worn part before charging me a dime. That's rare these days.&rdquo;</p>
+            <div class="author"><div class="avatar">R</div><div><strong>Renee T.</strong><span>Baytown, TX</span></div></div>
+          </div>
+          <div class="testimonial-card reveal" data-reveal>
+            <div class="stars">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <p>&ldquo;Free loaner car saved my whole week &mdash; didn't miss a single shift while my transmission was being rebuilt.&rdquo;</p>
+            <div class="author"><div class="avatar">J</div><div><strong>Jasmine K.</strong><span>Baytown, TX</span></div></div>
+          </div>
+        </div>
+        <p class="form-note" style="margin-top:var(--space-2)"><!-- TODO: replace with real, verified testimonials and star counts from Google --></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CONTACT ============================== -->
+  <section id="contact" class="light-section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow" style="justify-content:center">Visit Us</p>
+        <h2>Find Car Zone Auto Repair</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card reveal" data-reveal>
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><strong>Address</strong><span><!-- TODO: real address -->4210 Garth Rd, Baytown, TX 77521</span></div>
+          </div>
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div><strong>Phone</strong><a href="tel:+12815550142"><!-- TODO: real phone -->(281) 555-0142</a></div>
+          </div>
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+            <div><strong>Email</strong><a href="mailto:service@carzoneautobaytown.com"><!-- TODO: real email -->service@carzoneautobaytown.com</a></div>
+          </div>
+          <table class="hours-table">
+            <tbody>
+              <tr><td>Monday &ndash; Friday</td><td>7:30 AM &ndash; 6:00 PM</td></tr>
+              <tr><td>Saturday</td><td>8:00 AM &ndash; 4:00 PM</td></tr>
+              <tr><td>Sunday</td><td>Closed</td></tr>
+            </tbody>
+          </table>
+          <a href="#booking" class="btn btn-primary btn-block">Schedule Service</a>
+        </div>
+
+        <div class="map-embed reveal" data-reveal>
+          <!-- TODO: replace query with real business address -->
+          <iframe title="Car Zone Auto Repair location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=4210+Garth+Rd,+Baytown,+TX+77521&output=embed"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="#main" class="brand" aria-label="Car Zone Auto Repair home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15l1.2-4.8A2 2 0 0 1 7.1 9h9.8a2 2 0 0 1 1.9 1.2L20 15"/><path d="M2 15h20v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H5v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/><circle cx="7.5" cy="16.5" r="1.6"/><circle cx="16.5" cy="16.5" r="1.6"/></svg>
+          </span>
+          CAR <strong>ZONE</strong>
+        </a>
+        <p>Baytown's trusted full-service auto repair shop since 2008. Honest work, fair prices, and an AI assistant that never sleeps.</p>
+        <div class="footer-social">
+          <!-- TODO: replace with real social links -->
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg></a>
+          <a href="#" aria-label="Google Reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Oil &amp; Fluids</a></li>
+          <li><a href="#services">Brakes</a></li>
+          <li><a href="#services">AC &amp; Heating</a></li>
+          <li><a href="#services">Diagnostics</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#why-us">Why Us</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#booking">Book Now</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:+12815550142">(281) 555-0142</a></li>
+          <li><a href="mailto:service@carzoneautobaytown.com">Email Us</a></li>
+          <li><a href="#contact">Get Directions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Car Zone Auto Repair. All rights reserved.</span>
+      <span style="display:flex;align-items:center;gap:var(--space-3)">
+        Baytown, Texas
+        <button class="footer-management" id="mgmtLoginTrigger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Management Login
+        </button>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================== MANAGEMENT LOGIN (demo-only, no real backend) ============================== -->
+<!--
+  DEMO AUTH ONLY — this is a front-end visual placeholder, not real security.
+  The "password" is readable in js/main.js and enforced only in the browser,
+  so anyone can bypass it via devtools. Do not use this to gate anything
+  actually sensitive until it's replaced with real server-side authentication
+  (e.g. Netlify Identity, Auth0, Firebase Auth, or a custom backend).
+-->
+<div class="modal-overlay" id="loginOverlay" role="dialog" aria-modal="true" aria-label="Management login">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Management Login</h3>
+      <button class="modal-close" id="loginClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="lock-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <p style="color:var(--color-text-muted);font-size:var(--fs-sm);margin-bottom:var(--space-2)">Staff access only. Sign in to reach the management area.</p>
+
+      <div class="login-error" id="loginError" aria-live="polite">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Incorrect username or password.</span>
+      </div>
+
+      <form class="login-form" id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginUsername">Username</label>
+          <input type="text" id="loginUsername" name="username" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" name="password" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </form>
+
+      <div class="login-demo-hint">
+        Demo mode &mdash; use <code>admin</code> / <code>carzone2024</code> to sign in. Replace with real
+        authentication in <code>js/main.js</code> (MGMT_USERNAME / MGMT_PASSWORD) before launch.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== MANAGEMENT AREA (placeholder) ============================== -->
+<div class="modal-overlay" id="mgmtOverlay" role="dialog" aria-modal="true" aria-label="Management area">
+  <div class="modal-card" style="max-width:560px">
+    <div class="modal-header">
+      <h3>Management Area</h3>
+      <button class="modal-close" id="mgmtClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--color-text-muted);font-size:var(--fs-sm)">You're signed in. This area is a placeholder for now &mdash; hook it up to a real backend to bring it to life.</p>
+
+      <div class="mgmt-tiles">
+        <div class="mgmt-tile">
+          <div class="mgmt-tile-num">&mdash;</div>
+          <div class="mgmt-tile-label">Upcoming Appointments</div>
+          <div class="mgmt-tile-note">Syncs from Calendly once connected</div>
+        </div>
+        <div class="mgmt-tile">
+          <div class="mgmt-tile-num">&mdash;</div>
+          <div class="mgmt-tile-label">Customer Feedback</div>
+          <div class="mgmt-tile-note">1-3 star submissions land here</div>
+        </div>
+        <div class="mgmt-tile">
+          <div class="mgmt-tile-num">&mdash;</div>
+          <div class="mgmt-tile-label">Zoe Conversations</div>
+          <div class="mgmt-tile-note">Transcripts once Vapi is live</div>
+        </div>
+      </div>
+
+      <div class="mgmt-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span>Wire this panel up to a real backend (bookings database, feedback storage, Vapi call logs) to turn these placeholders into a live dashboard.</span>
+      </div>
+
+      <button class="btn btn-ghost btn-block" id="mgmtLogoutBtn" style="margin-top:var(--space-3)">Log Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== FLOATING AI LAUNCHER ============================== -->
+<div class="ai-launcher">
+  <span class="ai-launcher-label" id="launcherLabel">Ask Zoe anything</span>
+  <button class="ai-launcher-btn" id="aiLauncherBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="aiPanel" aria-label="Open AI assistant">
+    <span class="ping" aria-hidden="true"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+  </button>
+</div>
+
+<div class="ai-panel" id="aiPanel" role="dialog" aria-modal="false" aria-label="Chat with Zoe, AI service advisor">
+  <div class="ai-preview-header">
+    <div class="header-left">
+      <div class="ai-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+        <span class="pulse-dot" aria-hidden="true"></span>
+      </div>
+      <div><strong>Zoe</strong><span id="aiStatusText">Online now</span></div>
+    </div>
+    <button class="ai-panel-close" id="aiPanelClose" aria-label="Close chat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="ai-mode-tabs">
+    <button class="ai-mode-tab is-active" id="tabChat" aria-pressed="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chat
+    </button>
+    <button class="ai-mode-tab" id="tabVoice" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>
+      Talk
+    </button>
+    <span class="ai-demo-badge" id="demoBadge" title="Live mode activates once VAPI_PUBLIC_KEY is set in js/main.js">Demo</span>
+  </div>
+
+  <div class="ai-preview-body" id="aiChatBody">
+    <div class="chat-bubble bot">Hey, I'm Zoe from Car Zone Auto Repair! Ask me about services, pricing, hours, or say the word and I'll get you booked in.</div>
+  </div>
+
+  <div class="ai-preview-footer">
+    <input type="text" id="aiChatInput" placeholder="Type your message..." aria-label="Chat message" />
+    <button class="mic-btn" id="aiMicBtn" aria-label="Talk to Zoe">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>
+    </button>
+    <button id="aiSendBtn" aria-label="Send">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>
